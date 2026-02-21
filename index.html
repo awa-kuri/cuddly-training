@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>補助トレガイド</title>
+    
+    <!-- PWA設定 -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#111827">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #111827;
+            color: #e5e7eb;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 30px 0 20px;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            color: #9ca3af;
+        }
+
+        /* 挨拶メッセージ */
+        .greeting {
+            text-align: center;
+            padding: 16px;
+            margin-bottom: 20px;
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 8px;
+        }
+
+        .greeting-text {
+            font-size: 14px;
+            color: #d1d5db;
+            font-style: italic;
+        }
+
+        .content {
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 8px;
+            padding: 24px;
+            min-height: 400px;
+        }
+
+        .section-title {
+            font-size: 13px;
+            color: #6b7280;
+            letter-spacing: 0.05em;
+            margin-bottom: 16px;
+        }
+
+        /* 運動選択カード */
+        .exercise-card {
+            background-color: #111827;
+            border: 1px solid #374151;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .exercise-card:hover {
+            background-color: #1f2937;
+        }
+
+        .exercise-card:active {
+            background-color: #374151;
+        }
+
+        .exercise-name {
+            font-size: 16px;
+            color: #e5e7eb;
+            font-weight: 500;
+        }
+
+        .exercise-desc {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        .exercise-spec {
+            font-size: 12px;
+            color: #4b5563;
+            margin-top: 8px;
+        }
+
+        /* 追加ボタン */
+        .add-card {
+            background-color: transparent;
+            border: 1px dashed #374151;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            text-align: center;
+            transition: border-color 0.2s;
+        }
+
+        .add-card:hover {
+            border-color: #6b7280;
+        }
+
+        .add-card-text {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        /* 詳細画面 */
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .detail-title {
+            font-size: 20px;
+            color: #e5e7eb;
+        }
+
+        .detail-desc {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        .detail-spec {
+            background-color: #111827;
+            border: 1px solid #374151;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .detail-spec-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #9ca3af;
+            padding: 4px 0;
+        }
+
+        .detail-spec-label {
+            color: #6b7280;
+        }
+
+        /* ガイド画面 */
+        .guide-title {
+            text-align: center;
+            font-size: 20px;
+            color: #e5e7eb;
+            margin-bottom: 8px;
+        }
+
+        .guide-side {
+            text-align: center;
+            font-size: 16px;
+            color: #9ca3af;
+            margin-bottom: 16px;
+        }
+
+        .guide-message {
+            text-align: center;
+            font-size: 14px;
+            color: #d1d5db;
+            font-style: italic;
+            min-height: 24px;
+            margin-bottom: 16px;
+            padding: 0 16px;
+        }
+
+        .timer-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 4px solid #374151;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+
+        .timer-number {
+            font-size: 64px;
+            font-weight: 300;
+            color: #e5e7eb;
+        }
+
+        .timer-phase {
+            font-size: 18px;
+            margin-top: 8px;
+        }
+
+        .timer-ready {
+            font-size: 16px;
+            color: #6b7280;
+        }
+
+        .progress-info {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .progress-set {
+            font-size: 14px;
+            color: #9ca3af;
+        }
+
+        .progress-rep {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        .instructions {
+            text-align: center;
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 24px;
+        }
+
+        /* ボタン */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: none;
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        .btn-primary {
+            background-color: #22c55e;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #16a34a;
+        }
+
+        .btn-secondary {
+            background-color: #374151;
+            color: #e5e7eb;
+        }
+
+        .btn-secondary:hover {
+            background-color: #4b5563;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #4b5563;
+            color: #9ca3af;
+        }
+
+        .btn-outline:hover {
+            background-color: #374151;
+        }
+
+        .btn-danger {
+            background-color: transparent;
+            border: 1px solid #ef4444;
+            color: #ef4444;
+        }
+
+        .btn-danger:hover {
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+
+        /* 完了画面 */
+        .complete-icon {
+            font-size: 72px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .complete-title {
+            text-align: center;
+            font-size: 20px;
+            color: #e5e7eb;
+            margin-bottom: 8px;
+        }
+
+        .complete-summary {
+            text-align: center;
+            font-size: 14px;
+            color: #9ca3af;
+            margin-bottom: 24px;
+        }
+
+        .complete-quote {
+            text-align: center;
+            font-size: 13px;
+            color: #d1d5db;
+            font-style: italic;
+            margin-bottom: 32px;
+            padding: 0 16px;
+        }
+
+        /* 履歴 */
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .history-back {
+            font-size: 13px;
+            color: #6b7280;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .history-back:hover {
+            color: #9ca3af;
+        }
+
+        .history-stats {
+            background-color: #111827;
+            border: 1px solid #374151;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .history-stats-number {
+            font-size: 32px;
+            font-weight: 300;
+            color: #e5e7eb;
+        }
+
+        .history-stats-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        .history-item {
+            background-color: #111827;
+            border: 1px solid #374151;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .history-name {
+            font-size: 14px;
+            color: #e5e7eb;
+        }
+
+        .history-spec {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        .history-date {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 48px 0;
+            color: #4b5563;
+        }
+
+        .nav-link {
+            text-align: center;
+            margin-top: 24px;
+        }
+
+        .nav-link button {
+            font-size: 13px;
+            color: #6b7280;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .nav-link button:hover {
+            color: #9ca3af;
+        }
+
+        /* フォーム */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 8px;
+            letter-spacing: 0.05em;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            background-color: #111827;
+            border: 1px solid #374151;
+            border-radius: 4px;
+            color: #e5e7eb;
+            font-size: 16px;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #6b7280;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+
+        .form-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-checkbox input {
+            width: 18px;
+            height: 18px;
+            accent-color: #22c55e;
+        }
+
+        .form-checkbox label {
+            font-size: 14px;
+            color: #9ca3af;
+        }
+
+        /* フェーズ色 */
+        .phase-up { border-color: #22c55e !important; background-color: rgba(34, 197, 94, 0.1) !important; }
+        .phase-up .timer-phase { color: #22c55e; }
+        
+        .phase-hold { border-color: #eab308 !important; background-color: rgba(234, 179, 8, 0.1) !important; }
+        .phase-hold .timer-phase { color: #eab308; }
+        
+        .phase-down { border-color: #3b82f6 !important; background-color: rgba(59, 130, 246, 0.1) !important; }
+        .phase-down .timer-phase { color: #3b82f6; }
+        
+        .phase-rest { border-color: #8b5cf6 !important; background-color: rgba(139, 92, 246, 0.1) !important; }
+        .phase-rest .timer-phase { color: #8b5cf6; }
+
+        .footer {
+            text-align: center;
+            padding: 24px 0;
+            font-size: 11px;
+            color: #4b5563;
+        }
+
+        /* 確認ダイアログ */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .modal {
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 8px;
+            padding: 24px;
+            max-width: 320px;
+            width: 90%;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            color: #e5e7eb;
+            margin-bottom: 12px;
+        }
+
+        .modal-text {
+            font-size: 14px;
+            color: #9ca3af;
+            margin-bottom: 20px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>補助トレガイド</h1>
+        </div>
+        
+        <div id="greeting"></div>
+        
+        <div class="content" id="app">
+            <!-- JSで描画 -->
+        </div>
+
+        <div class="footer">
+            補助トレーニング
+        </div>
+    </div>
+
+    <div id="modal"></div>
+
+    <script>
+        // ========== デフォルトデータ ==========
+        const defaultExercises = [
+            {
+                id: 'calf-raise',
+                name: 'カーフレイズ',
+                description: 'ふくらはぎ強化・浮腫み対策',
+                reps: 20,
+                sets: 2,
+                tempo: { up: 2, hold: 1, down: 2 },
+                instructions: '踵を上げる → キープ → ゆっくり下ろす',
+                bilateral: true,
+                isDefault: true,
+            },
+            {
+                id: 'clamshell',
+                name: 'クラムシェル',
+                description: '中臀筋強化・股関節安定',
+                reps: 15,
+                sets: 2,
+                tempo: { up: 2, hold: 1, down: 2 },
+                instructions: '膝を開く → キープ → ゆっくり閉じる',
+                bilateral: false,
+                sides: ['左', '右'],
+                isDefault: true,
+            },
+            {
+                id: 'toe-raise',
+                name: 'トゥレイズ',
+                description: '脛（前脛骨筋）強化',
+                reps: 15,
+                sets: 2,
+                tempo: { up: 2, hold: 1, down: 2 },
+                instructions: 'つま先を上げる → キープ → ゆっくり下ろす',
+                bilateral: true,
+                isDefault: true,
+            },
+        ];
+
+        // ========== 声掛けメッセージ ==========
+        const greetings = {
+            morning: [
+                "おはよう。今日も来たな。",
+                "朝から動くか。良い心がけだ。",
+                "おはよう。身体を起こすか。",
+            ],
+            afternoon: [
+                "戻ってきたか。身体を動かそう。",
+                "よく来た。今日も積み重ねるか。",
+                "来たな。準備はよいか。",
+            ],
+            evening: [
+                "夜か。一日の締めくくりに、軽く動くのも悪くない。",
+                "今日も終わりが近い。身体を労わってやれ。",
+                "夜の鍛錬か。静かに、確実にやれ。",
+            ],
+        };
+
+        const guideMessages = {
+            last5: [
+                "あと5回。",
+                "残り5回だ。",
+            ],
+            last1: [
+                "最後の1回だ。",
+                "ラスト。しっかりやれ。",
+            ],
+            setComplete: [
+                "セット完了。少し休め。",
+                "よくやった。次のセットに備えろ。",
+            ],
+            switchSide: [
+                "次は反対側だ。同じようにやれ。",
+                "切り替えろ。反対側を始める。",
+            ],
+            paused: [
+                "一時停止中。準備ができたら再開せよ。",
+                "休憩中か。焦るな、自分のペースでやれ。",
+            ],
+        };
+
+        const completeQuotes = [
+            "小さな一歩で構わん。止まらなかったことを誇れ。",
+            "この一歩が、未来の貴殿を創る。",
+            "記録は力だ。着実に積み上げている。",
+            "今日を制した。明日に繋げ。",
+            "完璧にする必要はない。不完全な継続こそが真の強さだ。",
+            "怠惰は許さぬ。だが、今日の働きは讃える。",
+            "目標は遠い。だが、貴殿の足跡はここにある。",
+            "静かに、そして確実に。勝利は常に地道な継続の中にある。",
+            "よくやった。また明日だ。",
+            "今日も積み重ねたな。",
+        ];
+
+        // ========== 状態 ==========
+        let state = {
+            screen: 'home',
+            exercises: [],
+            selectedExercise: null,
+            currentSet: 1,
+            currentRep: 0,
+            currentSide: 0,
+            phase: 'ready',
+            timer: 0,
+            isRunning: false,
+            history: [],
+            guideMessage: '',
+            editingExercise: null,
+        };
+
+        let audioContext = null;
+        let intervalId = null;
+
+        // ========== ユーティリティ ==========
+        function getJSTDate() {
+            const now = new Date();
+            const jst = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
+            const year = jst.getFullYear();
+            const month = String(jst.getMonth() + 1).padStart(2, '0');
+            const day = String(jst.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function getJSTHour() {
+            const now = new Date();
+            const jst = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
+            return jst.getHours();
+        }
+
+        function getTimeOfDay() {
+            const hour = getJSTHour();
+            if (hour >= 5 && hour < 12) return 'morning';
+            if (hour >= 12 && hour < 18) return 'afternoon';
+            return 'evening';
+        }
+
+        function getRandomMessage(messages) {
+            return messages[Math.floor(Math.random() * messages.length)];
+        }
+
+        function generateId() {
+            return 'ex-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+        }
+
+        // ========== ストレージ ==========
+        function loadData() {
+            const savedExercises = localStorage.getItem('exerciseGuideExercises');
+            const savedHistory = localStorage.getItem('exerciseGuideHistory');
+            
+            if (savedExercises) {
+                state.exercises = JSON.parse(savedExercises);
+            } else {
+                state.exercises = JSON.parse(JSON.stringify(defaultExercises));
+            }
+            
+            if (savedHistory) {
+                state.history = JSON.parse(savedHistory);
+            }
+        }
+
+        function saveExercises() {
+            localStorage.setItem('exerciseGuideExercises', JSON.stringify(state.exercises));
+        }
+
+        function saveHistory() {
+            localStorage.setItem('exerciseGuideHistory', JSON.stringify(state.history));
+        }
+
+        // ========== オーディオ ==========
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+        }
+
+        function playBeep(frequency = 440, duration = 100) {
+            if (!audioContext) return;
+            try {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                oscillator.frequency.value = frequency;
+                oscillator.type = 'sine';
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration / 1000);
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + duration / 1000);
+            } catch (e) {
+                console.log('Audio error:', e);
+            }
+        }
+
+        function playComplete() {
+            playBeep(880, 150);
+            setTimeout(() => playBeep(1100, 150), 200);
+            setTimeout(() => playBeep(1320, 200), 400);
+        }
+
+        // ========== 画面遷移 ==========
+        function goHome() {
+            clearInterval(intervalId);
+            state.screen = 'home';
+            state.isRunning = false;
+            state.guideMessage = '';
+            render();
+        }
+
+        function goHistory() {
+            state.screen = 'history';
+            render();
+        }
+
+        function selectExercise(exerciseId) {
+            state.selectedExercise = state.exercises.find(e => e.id === exerciseId);
+            state.screen = 'detail';
+            render();
+        }
+
+        function goEdit(exerciseId) {
+            state.editingExercise = JSON.parse(JSON.stringify(
+                exerciseId ? state.exercises.find(e => e.id === exerciseId) : {
+                    id: generateId(),
+                    name: '',
+                    description: '',
+                    reps: 15,
+                    sets: 2,
+                    tempo: { up: 2, hold: 1, down: 2 },
+                    instructions: '',
+                    bilateral: true,
+                    sides: ['左', '右'],
+                    isDefault: false,
+                }
+            ));
+            state.screen = 'edit';
+            render();
+        }
+
+        function goGuide() {
+            initAudio();
+            const ex = state.selectedExercise;
+            state.currentSet = 1;
+            state.currentRep = 0;
+            state.currentSide = 0;
+            state.phase = 'ready';
+            state.isRunning = false;
+            state.guideMessage = '';
+            state.screen = 'guide';
+            render();
+        }
+
+        // ========== 編集・削除 ==========
+        function saveExercise() {
+            const ex = state.editingExercise;
+            
+            // バリデーション
+            if (!ex.name.trim()) {
+                alert('名前を入力してください');
+                return;
+            }
+            
+            const existingIndex = state.exercises.findIndex(e => e.id === ex.id);
+            if (existingIndex >= 0) {
+                state.exercises[existingIndex] = ex;
+            } else {
+                state.exercises.push(ex);
+            }
+            
+            saveExercises();
+            state.editingExercise = null;
+            state.screen = 'home';
+            render();
+        }
+
+        function confirmDelete(exerciseId) {
+            const ex = state.exercises.find(e => e.id === exerciseId);
+            showModal(
+                '削除の確認',
+                `「${ex.name}」を削除する。よいな？`,
+                () => {
+                    state.exercises = state.exercises.filter(e => e.id !== exerciseId);
+                    saveExercises();
+                    state.screen = 'home';
+                    hideModal();
+                    render();
+                }
+            );
+        }
+
+        function showModal(title, text, onConfirm) {
+            document.getElementById('modal').innerHTML = `
+                <div class="modal-overlay" onclick="hideModal()">
+                    <div class="modal" onclick="event.stopPropagation()">
+                        <div class="modal-title">${title}</div>
+                        <div class="modal-text">${text}</div>
+                        <div class="modal-buttons">
+                            <button class="btn btn-outline btn-small" onclick="hideModal()">やめる</button>
+                            <button class="btn btn-danger btn-small" onclick="(${onConfirm.toString()})()">削除する</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function hideModal() {
+            document.getElementById('modal').innerHTML = '';
+        }
+
+        // ========== ガイド操作 ==========
+        function startGuide() {
+            initAudio();
+            state.isRunning = true;
+            state.phase = 'up';
+            state.currentRep = 1;
+            state.timer = state.selectedExercise.tempo.up;
+            state.guideMessage = '';
+            playBeep(660, 100);
+            startTimer();
+            render();
+        }
+
+        function togglePause() {
+            state.isRunning = !state.isRunning;
+            if (state.isRunning) {
+                state.guideMessage = '';
+                startTimer();
+            } else {
+                clearInterval(intervalId);
+                state.guideMessage = getRandomMessage(guideMessages.paused);
+            }
+            render();
+        }
+
+	function startTimer() {
+    		clearInterval(intervalId);
+    		intervalId = setInterval(() => {
+        	state.timer--;
+        
+        	if (state.timer <= 0) {
+            	    handlePhaseTransition();
+           	    render();  // フェーズ変更時のみ全体再描画
+        	} else {
+            	    updateTimerDisplay();  // それ以外はタイマー部分だけ更新
+        	}
+    	    }, 1000);
+	}
+
+        function handlePhaseTransition() {
+            const ex = state.selectedExercise;
+            
+            if (state.phase === 'up') {
+                state.phase = 'hold';
+                state.timer = ex.tempo.hold;
+                playBeep(550, 80);
+            } else if (state.phase === 'hold') {
+                state.phase = 'down';
+                state.timer = ex.tempo.down;
+                playBeep(440, 80);
+            } else if (state.phase === 'down') {
+                // レップ完了時のメッセージ
+                const remaining = ex.reps - state.currentRep;
+                if (remaining === 5) {
+                    state.guideMessage = getRandomMessage(guideMessages.last5);
+                } else if (remaining === 1) {
+                    state.guideMessage = getRandomMessage(guideMessages.last1);
+                } else {
+                    state.guideMessage = '';
+                }
+
+                if (state.currentRep >= ex.reps) {
+                    // セット完了
+                    const totalSets = ex.bilateral ? ex.sets : ex.sets * 2;
+                    const currentTotalSet = ex.bilateral
+                        ? state.currentSet
+                        : state.currentSide * ex.sets + state.currentSet;
+
+                    if (currentTotalSet >= totalSets) {
+                        // 全完了
+                        clearInterval(intervalId);
+                        state.isRunning = false;
+                        state.phase = 'complete';
+                        playComplete();
+                        
+                        // 履歴追加
+                        state.history.push({
+                            id: Date.now(),
+                            exerciseId: ex.id,
+                            exerciseName: ex.name,
+                            date: getJSTDate(),
+                            sets: ex.sets,
+                            reps: ex.reps,
+                        });
+                        saveHistory();
+                        
+                        state.screen = 'complete';
+                    } else {
+                        // 次のセットまたは反対側
+                        if (!ex.bilateral && state.currentSet >= ex.sets) {
+                            state.currentSide = 1;
+                            state.currentSet = 1;
+                            state.guideMessage = getRandomMessage(guideMessages.switchSide);
+                            playBeep(880, 200);
+                        } else {
+                            state.currentSet++;
+                            state.guideMessage = getRandomMessage(guideMessages.setComplete);
+                            playBeep(770, 150);
+                        }
+                        state.currentRep = 0;
+                        state.phase = 'rest';
+                        state.timer = 5;
+                    }
+                } else {
+                    state.currentRep++;
+                    state.phase = 'up';
+                    state.timer = ex.tempo.up;
+                    playBeep(660, 100);
+                }
+            } else if (state.phase === 'rest') {
+                state.phase = 'up';
+                state.currentRep = 1;
+                state.timer = ex.tempo.up;
+                state.guideMessage = '';
+                playBeep(660, 100);
+            }
+        }
+
+        // ========== レンダリング ==========
+        function getPhaseText(phase) {
+            const texts = {
+                ready: '準備',
+                up: '上げる',
+                hold: 'キープ',
+                down: '下ろす',
+                rest: '休憩',
+                complete: '完了',
+            };
+            return texts[phase] || '';
+        }
+
+        function renderGreeting() {
+            const timeOfDay = getTimeOfDay();
+            const message = getRandomMessage(greetings[timeOfDay]);
+            document.getElementById('greeting').innerHTML = `
+                <div class="greeting">
+                    <div class="greeting-text">${message}</div>
+                </div>
+            `;
+        }
+
+        function renderHome() {
+            return `
+                <div class="section-title">運動を選択</div>
+                ${state.exercises.map(ex => `
+                    <div class="exercise-card" onclick="selectExercise('${ex.id}')">
+                        <div class="exercise-name">${ex.name}</div>
+                        <div class="exercise-desc">${ex.description || ''}</div>
+                        <div class="exercise-spec">${ex.reps}回 × ${ex.sets}セット${!ex.bilateral ? '（左右）' : ''}</div>
+                    </div>
+                `).join('')}
+                <div class="add-card" onclick="goEdit(null)">
+                    <div class="add-card-text">＋ 新しい運動を追加</div>
+                </div>
+                <div class="nav-link">
+                    <button onclick="goHistory()">履歴を見る →</button>
+                </div>
+            `;
+        }
+
+        function renderDetail() {
+            const ex = state.selectedExercise;
+            return `
+                <div class="detail-header">
+                    <div>
+                        <div class="detail-title">${ex.name}</div>
+                        <div class="detail-desc">${ex.description || ''}</div>
+                    </div>
+                </div>
+                
+                <div class="detail-spec">
+                    <div class="detail-spec-row">
+                        <span class="detail-spec-label">レップ数</span>
+                        <span>${ex.reps}回</span>
+                    </div>
+                    <div class="detail-spec-row">
+                        <span class="detail-spec-label">セット数</span>
+                        <span>${ex.sets}セット${!ex.bilateral ? '（左右）' : ''}</span>
+                    </div>
+                    <div class="detail-spec-row">
+                        <span class="detail-spec-label">テンポ</span>
+                        <span>上${ex.tempo.up}秒 / 止${ex.tempo.hold}秒 / 下${ex.tempo.down}秒</span>
+                    </div>
+                </div>
+                
+                <div class="instructions" style="margin-bottom: 24px;">${ex.instructions || ''}</div>
+                
+                <div class="btn-group" style="flex-direction: column;">
+                    <button class="btn btn-primary btn-full" onclick="goGuide()">開始</button>
+                    <button class="btn btn-secondary btn-full" onclick="goEdit('${ex.id}')">設定を変更</button>
+                    <button class="btn btn-danger btn-full" onclick="confirmDelete('${ex.id}')">削除</button>
+                    <button class="btn btn-outline btn-full" onclick="goHome()">戻る</button>
+                </div>
+            `;
+        }
+
+        function renderEdit() {
+            const ex = state.editingExercise;
+            const isNew = !state.exercises.find(e => e.id === ex.id);
+            return `
+                <div class="section-title">${isNew ? '新しい運動を追加' : '設定を変更'}</div>
+                
+                <div class="form-group">
+                    <label class="form-label">名前</label>
+                    <input type="text" class="form-input" value="${ex.name}" 
+                        onchange="state.editingExercise.name = this.value">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">説明（任意）</label>
+                    <input type="text" class="form-input" value="${ex.description || ''}" 
+                        onchange="state.editingExercise.description = this.value">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">動作の説明（任意）</label>
+                    <input type="text" class="form-input" value="${ex.instructions || ''}" 
+                        onchange="state.editingExercise.instructions = this.value"
+                        placeholder="例：踵を上げる → キープ → 下ろす">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">レップ数</label>
+                        <input type="number" class="form-input" value="${ex.reps}" min="1"
+                            onchange="state.editingExercise.reps = parseInt(this.value) || 1">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">セット数</label>
+                        <input type="number" class="form-input" value="${ex.sets}" min="1"
+                            onchange="state.editingExercise.sets = parseInt(this.value) || 1">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">テンポ（秒）</label>
+                    <div class="form-row-3">
+                        <div>
+                            <input type="number" class="form-input" value="${ex.tempo.up}" min="1"
+                                onchange="state.editingExercise.tempo.up = parseInt(this.value) || 1">
+                            <div style="font-size: 11px; color: #6b7280; text-align: center; margin-top: 4px;">上げる</div>
+                        </div>
+                        <div>
+                            <input type="number" class="form-input" value="${ex.tempo.hold}" min="0"
+                                onchange="state.editingExercise.tempo.hold = parseInt(this.value) || 0">
+                            <div style="font-size: 11px; color: #6b7280; text-align: center; margin-top: 4px;">キープ</div>
+                        </div>
+                        <div>
+                            <input type="number" class="form-input" value="${ex.tempo.down}" min="1"
+                                onchange="state.editingExercise.tempo.down = parseInt(this.value) || 1">
+                            <div style="font-size: 11px; color: #6b7280; text-align: center; margin-top: 4px;">下ろす</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="form-checkbox">
+                        <input type="checkbox" id="bilateral" ${ex.bilateral ? 'checked' : ''}
+                            onchange="state.editingExercise.bilateral = this.checked; render();">
+                        <label for="bilateral">両側同時（チェックを外すと左右別々にカウント）</label>
+                    </div>
+                </div>
+                
+                <div class="btn-group" style="flex-direction: column; margin-top: 24px;">
+                    <button class="btn btn-primary btn-full" onclick="saveExercise()">保存</button>
+                    <button class="btn btn-outline btn-full" onclick="goHome()">キャンセル</button>
+                </div>
+            `;
+        }
+
+        function renderGuide() {
+            const ex = state.selectedExercise;
+            const phaseClass = state.phase !== 'ready' ? `phase-${state.phase}` : '';
+            
+            return `
+                <div class="guide-title">${ex.name}</div>
+                ${!ex.bilateral ? `<div class="guide-side">${ex.sides ? ex.sides[state.currentSide] : (state.currentSide === 0 ? '左' : '右')}側</div>` : '<div style="height:16px"></div>'}
+                
+                <div class="guide-message">${state.guideMessage ? '「' + state.guideMessage + '」' : ''}</div>
+                
+                <div class="timer-circle ${phaseClass}">
+                    ${state.phase === 'ready' 
+                        ? '<div class="timer-ready">タップで開始</div>'
+                        : `<div class="timer-number">${state.timer}</div>
+                           <div class="timer-phase">${getPhaseText(state.phase)}</div>`
+                    }
+                </div>
+                
+                <div class="progress-info">
+                    <div class="progress-set">セット ${state.currentSet} / ${ex.sets}</div>
+                    <div class="progress-rep">レップ ${state.currentRep} / ${ex.reps}</div>
+                </div>
+                
+                <div class="instructions">${ex.instructions || ''}</div>
+                
+                <div class="btn-group">
+                    ${state.phase === 'ready' 
+                        ? `<button class="btn btn-primary" onclick="startGuide()">開始</button>
+                           <button class="btn btn-outline" onclick="goHome()">戻る</button>`
+                        : `<button class="btn btn-secondary" onclick="togglePause()">${state.isRunning ? '一時停止' : '再開'}</button>
+                           <button class="btn btn-outline" onclick="goHome()">中止</button>`
+                    }
+                </div>
+            `;
+        }
+
+        function renderComplete() {
+            const ex = state.selectedExercise;
+            const quote = getRandomMessage(completeQuotes);
+            
+            return `
+                <div class="complete-icon">✓</div>
+                <div class="complete-title">${ex.name}</div>
+                <div class="complete-summary">${ex.reps}回 × ${ex.sets}セット${!ex.bilateral ? '（左右）' : ''} 完了</div>
+                <div class="complete-quote">「${quote}」</div>
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="goHome()">戻る</button>
+                </div>
+            `;
+        }
+
+        function renderHistory() {
+            const items = [...state.history].reverse();
+            const totalCount = state.history.length;
+            
+            return `
+                <div class="history-header">
+                    <div class="section-title">実施履歴</div>
+                    <button class="history-back" onclick="goHome()">← 戻る</button>
+                </div>
+                
+                <div class="history-stats">
+                    <div class="history-stats-number">${totalCount}</div>
+                    <div class="history-stats-label">累計実施回数</div>
+                </div>
+                
+                ${items.length === 0 
+                    ? '<div class="empty-state">記録なし</div>'
+                    : items.slice(0, 50).map(record => `
+                        <div class="history-item">
+                            <div>
+                                <div class="history-name">${record.exerciseName}</div>
+                                <div class="history-spec">${record.reps}回 × ${record.sets}セット</div>
+                            </div>
+                            <div class="history-date">${record.date}</div>
+                        </div>
+                    `).join('')
+                }
+                ${items.length > 50 ? '<div class="empty-state">...他 ' + (items.length - 50) + ' 件</div>' : ''}
+            `;
+        }
+
+	function updateTimerDisplay() {
+    		const timerNumber = document.querySelector('.timer-number');
+    		const timerPhase = document.querySelector('.timer-phase');
+    		const timerCircle = document.querySelector('.timer-circle');
+    		const progressRep = document.querySelector('.progress-rep');
+    		const guideMessage = document.querySelector('.guide-message');
+    
+    		if (timerNumber) timerNumber.textContent = state.timer;
+    		if (timerPhase) timerPhase.textContent = getPhaseText(state.phase);
+    		if (progressRep) progressRep.textContent = `レップ ${state.currentRep} / ${state.selectedExercise.reps}`;
+    		if (guideMessage) guideMessage.textContent = state.guideMessage ? '「' + state.guideMessage + '」' : '';
+    
+    		if (timerCircle) {
+     		   timerCircle.className = 'timer-circle';
+     		   if (state.phase !== 'ready') {
+    		        timerCircle.classList.add('phase-' + state.phase);
+      		  }
+   		 }
+		}
+
+
+        function render() {
+            const app = document.getElementById('app');
+            
+            switch (state.screen) {
+                case 'home':
+                    app.innerHTML = renderHome();
+                    break;
+                case 'detail':
+                    app.innerHTML = renderDetail();
+                    break;
+                case 'edit':
+                    app.innerHTML = renderEdit();
+                    break;
+                case 'guide':
+                    app.innerHTML = renderGuide();
+                    break;
+                case 'complete':
+                    app.innerHTML = renderComplete();
+                    break;
+                case 'history':
+                    app.innerHTML = renderHistory();
+                    break;
+            }
+        }
+
+        // ========== Service Worker登録 ==========
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then((reg) => console.log('SW registered:', reg))
+                    .catch((err) => console.log('SW registration failed:', err));
+            });
+        }
+
+        // ========== 初期化 ==========
+        loadData();
+        renderGreeting();
+        render();
+    </script>
+</body>
+</html>
